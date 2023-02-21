@@ -198,9 +198,6 @@ static void tty_show(unsigned char c)
     if (c == DEL) {
         tty_put('^');
         tty_put('?');
-    } else if (ISCTL(c)) {
-        tty_put('^');
-        tty_put(UNCTL(c));
     } else if (rl_meta_chars && ISMETA(c)) {
         tty_put('M');
         tty_put('-');
