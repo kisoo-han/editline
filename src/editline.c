@@ -86,6 +86,8 @@ static el_hist_t  H = {
     .Lines = NULL,
 };
 
+char **History = NULL;
+
 static char        NILSTR[] = "";
 static const char *el_input = NILSTR;
 static char       *Yanked;
@@ -1225,8 +1227,10 @@ static char *editinput(int complete)
 
 static void hist_alloc(void)
 {
-    if (!H.Lines)
+    if (!H.Lines) {
         H.Lines = calloc(el_hist_size, sizeof(char *));
+	History = H.Lines;
+    }
 }
 
 static void hist_add(const char *p)
@@ -1744,6 +1748,12 @@ static el_status_t c_complete(void)
     return c_possible();
 }
 
+static el_status_t do_tab(void)
+{
+    rl_insert_text("\t");
+    return CSstay;
+}
+
 static el_status_t accept_line(void)
 {
     rl_line_buffer[rl_end] = '\0';
@@ -1944,7 +1954,7 @@ static el_keymap_t Map[64] = {
     {   CTL('F'),       fd_char         },
     {   CTL('G'),       el_ring_bell    },
     {   CTL('H'),       bk_del_char     },
-    {   CTL('I'),       c_complete      },
+    {   CTL('I'),       do_tab          },
     {   CTL('J'),       accept_line     },
     {   CTL('K'),       kill_line       },
     {   CTL('L'),       refresh         },
@@ -2046,6 +2056,12 @@ rl_getc_func_t *rl_set_getc_func(rl_getc_func_t *func)
     rl_getc_func_t *old = rl_getc_function;
     rl_getc_function = func;
     return old;
+}
+
+int
+history_length (void)
+{
+    return (H.Size);
 }
 
 /**
