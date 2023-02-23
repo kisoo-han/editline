@@ -61,6 +61,8 @@ typedef char **rl_completion_func_t (const char *, int, int);
 
 /* Display 8-bit chars "as-is" or as `M-x'? Toggle with M-m. (Default:0 - "as-is") */
 extern int rl_meta_chars;
+extern int history_length (void);
+extern char **History;
 
 /* Editline specific functions. */
 extern char *      el_find_word(void);
