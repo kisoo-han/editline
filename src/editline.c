@@ -120,7 +120,8 @@ static char       *line_down = "\x1b[B";
 int prompt_len = 0;
 
 int               el_no_echo = 0; /* e.g., under Emacs */
-int               el_no_hist = 0;
+int               el_no_hist = 0; /* do not add history automatically */
+int               el_no_hist2 = 1; /* do not add history automatically */
 int               rl_point;
 int               rl_mark;
 int               rl_end;
@@ -1476,7 +1477,7 @@ static char *el_deprep(char *line)
     H.Lines[H.Size] = NULL;
 
     /* Add to history, unless no-echo or no-history mode ... */
-    if (!el_no_echo && !el_no_hist) {
+    if (!el_no_echo && !el_no_hist2) {
         if (line != NULL && *line != '\0')
             hist_add(line);
     }
@@ -2064,6 +2065,11 @@ history_length (void)
     return (H.Size);
 }
 
+char *
+history_get (int index)
+{
+    return (index < 0 || index > H.Size) ? NULL : History [index-1];
+}
 /**
  * Local Variables:
  *  c-file-style: "k&r"
